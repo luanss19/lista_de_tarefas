@@ -1,4 +1,4 @@
-# Lista de Tarefas
+# Lista de Tarefas / To-Do List
 
 Aplicativo em desenvolvimento.
 
