@@ -43,9 +43,7 @@ class _TodoListPageState extends State<TodoListPage> {
                       onPressed: () {
                         setState(() {
                           Todo newTodo = Todo(
-                              title: todoController.text,
-                              date: DateTime.now()
-                          );
+                              title: todoController.text, date: DateTime.now());
                           todos.add(newTodo);
                           todoController.clear();
                         });
@@ -53,9 +51,10 @@ class _TodoListPageState extends State<TodoListPage> {
                       child: Icon(
                         Icons.add,
                         size: 30,
+                        color: Colors.black,
                       ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.lightGreen,
+                        primary: Color(0xffFFAEBC),
                         padding: EdgeInsets.all(14),
                       ),
                     )
@@ -68,8 +67,7 @@ class _TodoListPageState extends State<TodoListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (Todo todo in todos)
-                        TodoListItem(todo: todo)
+                      for (Todo todo in todos) TodoListItem(todo: todo)
                     ],
                   ),
                 ),
@@ -79,17 +77,22 @@ class _TodoListPageState extends State<TodoListPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(
-                          'Você possui ${todos.length} tarefas pendentes'),
+                      child:
+                          Text('Você possui ${todos.length} tarefas pendentes'),
                     ),
                     SizedBox(
                       width: 8,
                     ),
                     ElevatedButton(
                       onPressed: () {},
-                      child: Text('Limpar Tudo'),
+                      child: Text(
+                        'Limpar Tudo',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.lightGreen,
+                        primary: Color(0xffFFAEBC),
                         padding: EdgeInsets.all(14),
                       ),
                     )

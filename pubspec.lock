@@ -62,11 +62,25 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_slidable:
+    dependency: "direct dev"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  intl:
+    dependency: "direct dev"
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.0"
   matcher:
     dependency: transitive
     description:
