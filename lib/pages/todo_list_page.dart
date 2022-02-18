@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lista_de_tarefas/models/todo.dart';
+import 'package:lista_de_tarefas/widgets/todo_list_item.dart';
 
 class TodoListPage extends StatefulWidget {
   TodoListPage({Key? key}) : super(key: key);
@@ -9,16 +11,15 @@ class TodoListPage extends StatefulWidget {
 }
 
 class _TodoListPageState extends State<TodoListPage> {
-  List<String> todos = [];
+  List<Todo> todos = [];
 
   final TextEditingController todoController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -41,7 +42,11 @@ class _TodoListPageState extends State<TodoListPage> {
                     ElevatedButton(
                       onPressed: () {
                         setState(() {
-                          todos.add(todoController.text);
+                          Todo newTodo = Todo(
+                              title: todoController.text,
+                              date: DateTime.now()
+                          );
+                          todos.add(newTodo);
                           todoController.clear();
                         });
                       },
@@ -63,18 +68,8 @@ class _TodoListPageState extends State<TodoListPage> {
                   child: ListView(
                     shrinkWrap: true,
                     children: [
-                      for (String todo in todos)
-                        ListTile(
-                          title: Text(todo),
-                          subtitle: Text('date'),
-                          onTap: (){
-                            print('tarefa : $todo');
-                          },
-                          leading: Icon(
-                            Icons.done,
-                            size: 30,
-                          ),
-                        )
+                      for (Todo todo in todos)
+                        TodoListItem(todo: todo)
                     ],
                   ),
                 ),
@@ -84,7 +79,8 @@ class _TodoListPageState extends State<TodoListPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('Você possui 0 tarefas pendentes'),
+                      child: Text(
+                          'Você possui ${todos.length} tarefas pendentes'),
                     ),
                     SizedBox(
                       width: 8,
