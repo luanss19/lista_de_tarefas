@@ -4,9 +4,14 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 class TodoListItem extends StatelessWidget {
-  const TodoListItem({Key? key, required this.todo}) : super(key: key);
+  const TodoListItem({
+    Key? key,
+    required this.todo,
+    required this.onDelete,
+  }) : super(key: key);
 
   final Todo todo;
+  final Function(Todo) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,9 @@ class TodoListItem extends StatelessWidget {
       actionPane: const SlidableBehindActionPane(),
       secondaryActions: [
         IconSlideAction(
+          onTap: (){
+            onDelete(todo);
+          },
           iconWidget: Container(
             margin: EdgeInsets.all(4.2),
             decoration: BoxDecoration(
@@ -43,7 +51,7 @@ class TodoListItem extends StatelessWidget {
         )
       ],
       child: Card(
-        color: Color(0xffFBE7C6),
+        color: Colors.white70,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Column(
