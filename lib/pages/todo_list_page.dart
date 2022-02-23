@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lista_de_tarefas/models/todo.dart';
+import 'package:lista_de_tarefas/repositories/todo_repository.dart';
 import 'package:lista_de_tarefas/widgets/todo_list_item.dart';
 
 class TodoListPage extends StatefulWidget {
@@ -16,6 +17,19 @@ class _TodoListPageState extends State<TodoListPage> {
   Todo? deletedTodo;
   int? positionDelTodo;
   final TextEditingController todoController = TextEditingController();
+  final TodoRepository todoRepository = TodoRepository();
+
+  String? errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    todoRepository.getTodoList().then((value) {
+      setState(() {
+        todos = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +49,20 @@ class _TodoListPageState extends State<TodoListPage> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffFFAEBC))),
+                              borderSide: BorderSide(
+                                color: Color(0xffFFAEBC),
+                                  width: 2
+                              ),
+                            ),
                             focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xffFFAEBC))),
-                            labelText: 'Adicione uma tarefa',
+                              borderSide: BorderSide(
+                                color: Color(0xffFFAEBC),
+                                width: 2
+                              ),
+                            ),
                             labelStyle: TextStyle(color: Colors.black54),
-                            hintText: 'Ex. : Ir ao mercado.'),
+                            labelText: 'Adicione uma tarefa',
+                            errorText: errorText,),
                       ),
                     ),
                     SizedBox(
@@ -50,12 +70,24 @@ class _TodoListPageState extends State<TodoListPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
+                        String text = todoController.text;
+
+                        if (text.isEmpty) {
+                          setState(() {
+                            errorText = 'Este campo não pode ficar em branco';
+                          });
+                          return;
+                        }
                         setState(() {
                           Todo newTodo = Todo(
-                              title: todoController.text, date: DateTime.now());
+                            title: text,
+                            date: DateTime.now(),
+                          );
                           todos.add(newTodo);
-                          todoController.clear();
+                          errorText = null;
                         });
+                        todoController.clear();
+                        todoRepository.saveTodoList(todos);
                       },
                       child: Icon(
                         Icons.add,
@@ -125,6 +157,7 @@ class _TodoListPageState extends State<TodoListPage> {
     setState(() {
       todos.remove(todo);
     });
+    todoRepository.saveTodoList(todos);
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -140,6 +173,7 @@ class _TodoListPageState extends State<TodoListPage> {
           setState(() {
             todos.insert(positionDelTodo!, deletedTodo!);
           });
+          todoRepository.saveTodoList(todos);
         },
         textColor: Color(0xffFFAEBC),
       ),
@@ -154,13 +188,13 @@ class _TodoListPageState extends State<TodoListPage> {
         content: Text('Você tem certeza que deseja apagar todas as tarefas?'),
         actions: [
           TextButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.of(context).pop();
             },
             child: Text('Cancelar'),
           ),
           TextButton(
-            onPressed: (){
+            onPressed: () {
               Navigator.of(context).pop();
               deleteAllTodos();
             },
@@ -176,9 +210,10 @@ class _TodoListPageState extends State<TodoListPage> {
     );
   }
 
-  void deleteAllTodos(){
+  void deleteAllTodos() {
     setState(() {
       todos.clear();
     });
+    todoRepository.saveTodoList(todos);
   }
 }
